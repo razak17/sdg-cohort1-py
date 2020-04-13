@@ -26,9 +26,9 @@ def requested_time(data):
 # IMPACT
 def impactEstimates(data):
     # Challenge 1
-    currently_infected = data["reportedCases"] * 10
+    currently_infected = int(data["reportedCases"] * 10)
 
-    projected_infections = currently_infected * requested_time(data)
+    projected_infections = int(currently_infected * requested_time(data))
 
     # Challenge 2
     severe_cases_by_requested_time = int(projected_infections * 0.15)
@@ -38,38 +38,34 @@ def impactEstimates(data):
     available_beds = int(available_beds)
 
     # Challenge 3
-    cases_for_ICU_by_requested_time = projected_infections * 0.05
-    cases_for_ICU_by_requested_time = int(cases_for_ICU_by_requested_time)
+    cases_for_ICU_by_requested_time = int(projected_infections * 0.05)
 
-    cases_for_ventilators_by_requested_time = projected_infections * 0.02
-    cases_for_ventilators_by_requested_time = int(
-        cases_for_ventilators_by_requested_time)
+    cases_for_ventilators_by_requested_time = int(projected_infections * 0.02)
 
     avg_daily_income_USD = data["region"]["avgDailyIncomeInUSD"]
     avg_daily_income_population = data["region"]["avgDailyIncomePopulation"]
     initial = avg_daily_income_USD * avg_daily_income_population
 
-    dollars_in_flight = (
-        projected_infections * initial) / convert_to_days(data)
+    dollars_in_flight = (projected_infections * initial) / convert_to_days(data)
     dollars_in_flight = int(dollars_in_flight)
 
     return {
-        "currentlyInfected": int(currently_infected),
-        "infectionsByRequestedTime": int(projected_infections),
-        "severeCasesByRequestedTime": int(severe_cases_by_requested_time),
-        "hospitalBedsByRequestedTime": int(available_beds),
-        "casesForICUByRequestedTime": int(cases_for_ICU_by_requested_time),
-        "casesForVentilatorsByRequestedTime": int(
-            cases_for_ventilators_by_requested_time),
-        "dollarsInFlight": float(dollars_in_flight)
+        "currentlyInfected": currently_infected,
+        "infectionsByRequestedTime": projected_infections,
+        "severeCasesByRequestedTime": severe_cases_by_requested_time,
+        "hospitalBedsByRequestedTime": available_beds,
+        "casesForICUByRequestedTime": cases_for_ICU_by_requested_time,
+        "casesForVentilatorsByRequestedTime":
+            cases_for_ventilators_by_requested_time,
+        "dollarsInFlight": dollars_in_flight
     }
 
 
 # SEVERE IMPACT
 def severeImpactEstimates(data):
     # Challenge 1
-    currently_infected = data["reportedCases"] * 50
-    projected_infections = currently_infected * requested_time(data)
+    currently_infected = int(data["reportedCases"] * 50)
+    projected_infections = int(currently_infected * requested_time(data))
 
     # Challenge 2
     severe_cases_by_requested_time = int(projected_infections * 0.15)
@@ -78,12 +74,9 @@ def severeImpactEstimates(data):
     available_beds = int(total_hospital_beds - severe_cases_by_requested_time)
 
     # Challenge 3
-    cases_for_ICU_by_requested_time = projected_infections * 0.05
-    cases_for_ICU_by_requested_time = int(cases_for_ICU_by_requested_time)
+    cases_for_ICU_by_requested_time = int(projected_infections * 0.05)
 
-    cases_for_ventilators_by_requested_time = projected_infections * 0.02
-    cases_for_ventilators_by_requested_time = int(
-        cases_for_ventilators_by_requested_time)
+    cases_for_ventilators_by_requested_time = int(projected_infections * 0.02)
 
     avg_daily_income_USD = data["region"]["avgDailyIncomeInUSD"]
     avg_daily_income_population = data["region"]["avgDailyIncomePopulation"]
@@ -93,14 +86,14 @@ def severeImpactEstimates(data):
     dollars_in_flight = int(dollars_in_flight)
 
     return {
-        "currentlyInfected": int(currently_infected),
-        "infectionsByRequestedTime": int(projected_infections),
-        "severeCasesByRequestedTime": int(severe_cases_by_requested_time),
-        "hospitalBedsByRequestedTime": int(available_beds),
-        "casesForICUByRequestedTime": int(cases_for_ICU_by_requested_time),
-        "casesForVentilatorsByRequestedTime": int(
-            cases_for_ventilators_by_requested_time),
-        "dollarsInFlight": float(dollars_in_flight)
+        "currentlyInfected": currently_infected,
+        "infectionsByRequestedTime": projected_infections,
+        "severeCasesByRequestedTime": severe_cases_by_requested_time,
+        "hospitalBedsByRequestedTime": available_beds,
+        "casesForICUByRequestedTime": cases_for_ICU_by_requested_time,
+        "casesForVentilatorsByRequestedTime":
+            cases_for_ventilators_by_requested_time,
+        "dollarsInFlight": dollars_in_flight
     }
 
 
@@ -111,3 +104,20 @@ def estimator(data):
         "severeImpact": severeImpactEstimates(data),
     }
     return response
+
+
+data = {
+    "region": {
+        "name": "Africa",
+        "avgAge": 19.7,
+        "avgDailyIncomeInUSD": 5,
+        "avgDailyIncomePopulation": 0.71,
+    },
+    "periodType": "days",
+    "timeToElapse": 58,
+    "reportedCases": 674,
+    "population": 66622705,
+    "totalHospitalBeds": 1380614
+}
+
+print(estimator(data))
