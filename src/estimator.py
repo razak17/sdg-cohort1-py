@@ -3,10 +3,8 @@ def convert_to_days(data):
 
     if data["periodType"] == "months":
         number_of_days = data["timeToElapse"] * 30
-
     elif data["periodType"] == "weeks":
         number_of_days = data["timeToElapse"] * 7
-
     elif data["periodType"] == "days":
         number_of_days = data["timeToElapse"]
 
@@ -16,7 +14,6 @@ def convert_to_days(data):
 def requested_time(data):
     if data["periodType"] == "months":
         return 2 ** int((data["timeToElapse"] * 30) / 3)
-
     elif data["periodType"] == "weeks":
         return 2 ** int((data["timeToElapse"] * 7) / 3)
 
@@ -27,7 +24,6 @@ def requested_time(data):
 def impactEstimates(data):
     # Challenge 1
     currently_infected = int(data["reportedCases"] * 10)
-
     projected_infections = int(currently_infected * requested_time(data))
 
     # Challenge 2
@@ -39,14 +35,14 @@ def impactEstimates(data):
 
     # Challenge 3
     cases_for_ICU_by_requested_time = int(projected_infections * 0.05)
-
     cases_for_ventilators_by_requested_time = int(projected_infections * 0.02)
 
     avg_daily_income_USD = data["region"]["avgDailyIncomeInUSD"]
     avg_daily_income_population = data["region"]["avgDailyIncomePopulation"]
     initial = avg_daily_income_USD * avg_daily_income_population
 
-    dollars_in_flight = (projected_infections * initial) / convert_to_days(data)
+    dollars_in_flight = (
+        projected_infections * initial) / convert_to_days(data)
     dollars_in_flight = int(dollars_in_flight)
 
     return {
@@ -75,7 +71,6 @@ def severeImpactEstimates(data):
 
     # Challenge 3
     cases_for_ICU_by_requested_time = int(projected_infections * 0.05)
-
     cases_for_ventilators_by_requested_time = int(projected_infections * 0.02)
 
     avg_daily_income_USD = data["region"]["avgDailyIncomeInUSD"]
@@ -104,20 +99,3 @@ def estimator(data):
         "severeImpact": severeImpactEstimates(data),
     }
     return response
-
-
-data = {
-    "region": {
-        "name": "Africa",
-        "avgAge": 19.7,
-        "avgDailyIncomeInUSD": 5,
-        "avgDailyIncomePopulation": 0.71,
-    },
-    "periodType": "days",
-    "timeToElapse": 58,
-    "reportedCases": 674,
-    "population": 66622705,
-    "totalHospitalBeds": 1380614
-}
-
-print(estimator(data))
